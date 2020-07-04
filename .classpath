@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/ghddn/Downloads/selenium-server-standalone-3.141.59.jar"/>
 	<classpathentry kind="lib" path="C:/Users/ghddn/Downloads/jsoup-1.13.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ghddn/Downloads/jackson-core-2.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ghddn/Downloads/json_simple-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

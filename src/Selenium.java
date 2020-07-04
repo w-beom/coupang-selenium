@@ -14,13 +14,21 @@ import java.util.NoSuchElementException;
 
 import javax.imageio.ImageIO;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.json.Json;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.fasterxml.jackson.core.JsonParser;
 
 public class Selenium {
 	// WebDriver
@@ -28,7 +36,7 @@ public class Selenium {
 
 	// Properties
 	public static final String WEB_DRIVER_ID = "webdriver.chrome.driver";
-	public static final String WEB_DRIVER_PATH = "D:\\¼¼·¹´Ï¿ò\\chromedriver.exe";
+	public static final String WEB_DRIVER_PATH = "D:\\ì„¸ë ˆë‹ˆì›€\\chromedriver.exe";
 
 	public Selenium() {
 		super();
@@ -46,14 +54,13 @@ public class Selenium {
 		driver = new ChromeDriver(options);
 	}
 
-	int code = 1;
+	String code = "1688";
 
 	public void crawlImg(Map<String, String> list) {
 		String title = "";
 
 		try {
 			Iterator<String> iterator = list.keySet().iterator();
-			BufferedImage bi = null;
 
 			while (iterator.hasNext()) {
 				int i = 1;
@@ -71,21 +78,19 @@ public class Selenium {
 				System.out.println(title + " OPEN");
 				WebElement sendKey = driver.findElement(By.tagName("body"));
 
+				Thread.sleep(1000);
+				sendKey.sendKeys(Keys.END);
+				Thread.sleep(1000);
+				sendKey.sendKeys(Keys.END);
+				Thread.sleep(1000);
+				sendKey.sendKeys(Keys.END);
 
-				Thread.sleep(1000);
-				sendKey.sendKeys(Keys.END);
-				Thread.sleep(1000);
-				sendKey.sendKeys(Keys.END);
-				Thread.sleep(1000);
-				sendKey.sendKeys(Keys.END);
-				if (code == 1) {
+				if (code.equals("1688")) {
+
+
 					List<WebElement> webElements = driver.findElement(By.id("desc-lazyload-container"))
 							.findElements(By.tagName("img"));
 
-					System.out.println("»çÀÌÁî´Â ? : " + webElements.size());
-
-					System.out.println("ÀÌ¹ÌÁö ÆÄ½ÌÁß");
-					// »ó¼¼ÀÌ¹ÌÁö ÆÄ½Ì
 					for (WebElement webElement : webElements) {
 						String imageLink = webElement.getAttribute("src");
 						String filePath = "D:\\alrba\\" + title + "/" + (i++) + ".jpg";
@@ -93,26 +98,24 @@ public class Selenium {
 
 					}
 
-					System.out.println("ÆÄ½Ì¿Ï·á");
-					System.out.println("¸ŞÀÎ»çÁø ÆÄ½ÌÁß");
-					// ¸ŞÀÎ»çÁø ÆÄ½Ì
 					int mainIndex = 1;
-					
-					List<WebElement> webElements2 = driver.findElement(By.xpath("//*[@id=\"mod-detail-bd\"]/div[2]/div[13]/div/div/div/div[1]/div[2]/ul")).findElements(By.tagName("li"));
+					//main ì‚¬ì§„ ê°€ì ¸ì˜¤ê¸°
+					List<WebElement> webElements2 = driver
+							.findElement(By.xpath("//*[@id=\"mod-detail-bd\"]/div[2]/div[13]/div/div/div/div[1]/div[2]/ul"))
+							.findElements(By.tagName("li"));
 					for (WebElement main : webElements2) {
 						main.click();
-						//main.findElement(By.className("box-img")).click();
 
 						String filePath = "D:/alrba/" + title + "/m" + (mainIndex++) + ".jpg";
-						String imageLink = driver.findElement(By.xpath("//*[@id=\"mod-detail-bd\"]/div[1]/div/div/div/div/div[1]/div/a/img"))
+						String imageLink = driver
+								.findElement(By.xpath("//*[@id=\"mod-detail-bd\"]/div[1]/div/div/div/div/div[1]/div/a/img"))
 								.getAttribute("src");
 						System.out.println(imageLink);
 						saveImage(imageLink, filePath);
 					}
-					System.out.println("¸ŞÀÎ»çÁø ÆÄ½Ì¿Ï·á");
-
-				} else if (code == 2) {
+				} else if (code.equals("taobao")) {
 					int mainIndex = 1;
+					//ìƒì„¸ ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
 					List<WebElement> detailImageList = driver.findElement(By.xpath("//*[@id=\"description\"]"))
 							.findElements(By.tagName("img"));
 					for (WebElement image : detailImageList) {
@@ -122,7 +125,7 @@ public class Selenium {
 						saveImage(imageLink, filePath);
 					}
 
-					// ¸ŞÀÎ»çÁø ÆÄ½Ì
+					//ë©”ì¸ ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸° 
 					List<WebElement> mainImageList = driver.findElement(By.xpath("//*[@id=\"J_isku\"]/div/dl[2]/dd/ul"))
 							.findElements(By.tagName("li"));
 					for (WebElement mainImage : mainImageList) {
@@ -132,24 +135,53 @@ public class Selenium {
 						saveImage(imageLink, filePath);
 
 					}
+				}else if(code.equals("tmall")) {
+					int mainIndex = 1;
+
+					//ìƒì„¸ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
+					List<WebElement> detailImageList = driver.findElement(By.xpath("//*[@id=\"description\"]/div")).findElements(By.tagName("img"));
+					for (WebElement image : detailImageList) {
+
+						String imageLink = image.getAttribute("src");
+						String filePath = "D:\\alrba\\" + title + "/" + (i++) + ".jpg";
+						saveImage(imageLink, filePath);
+					}
+
+					//ë©”ì¸ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸°
+					List<WebElement> mainImageList = driver
+							.findElement(By.xpath("//*[@id=\"J_DetailMeta\"]/div[1]/div[1]/div/div[4]/div/div/dl[2]/dd/ul"))
+							.findElements(By.tagName("li"));
+
+					for (WebElement mainImage : mainImageList) {
+						mainImage.click();
+						String imageLink = driver.findElement(By.xpath("//*[@id=\"J_ImgBooth\"]")).getAttribute("src");
+						String filePath = "D:/alrba/" + title + "/m" + (mainIndex++) + ".jpg";
+						saveImage(imageLink, filePath);
+					}
 				}
 			}
 
 		} catch (IllegalArgumentException e) {
-			System.out.println("IllegalArgumentException¹ß»ı Æú´õ¸¦ »èÁ¦ÈÄ ´Ù½Ã ´Ù¿î·Îµå ÇÕ´Ï´Ù.");
+			System.out.println("IllegalArgumentException ë°œìƒ");
 			deleteDirectory(title);
 			crawlImg(list);
 		} catch (org.openqa.selenium.NoSuchElementException e) {
 			e.printStackTrace();
-			if (code == 1)
-				code = 2;
-			else
-				code = 1;
+			if (code.equals("1688"))
+				code = "taobao";
+			else if (code.equals("taobao"))
+				code = "tmall";
+			else 
+				code="1688";
 			deleteDirectory(title);
 
 			crawlImg(list);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} catch (WebDriverException e) {
+			e.printStackTrace();
+			deleteDirectory(title);
+			crawlImg(list);
 		}
 
 		finally {
@@ -158,11 +190,10 @@ public class Selenium {
 
 	}
 
-	/** Æú´õ »èÁ¦ **/
 	public void deleteDirectory(String title) {
 		File deleteDirectory = new File("D:/alrba/" + title);
 
-		System.out.println("»èÁ¦°æ·Î : " + deleteDirectory.getPath());
+		System.out.println("í´ë” ê²½ë¡œ : " + deleteDirectory.getPath());
 
 		File[] deleteFileList = deleteDirectory.listFiles();
 		for (File deleteFile : deleteFileList) {
@@ -172,7 +203,6 @@ public class Selenium {
 		deleteDirectory.delete();
 	}
 
-	/** ÀÌ¹ÌÁö ÀúÀå **/
 	public void saveImage(String imageLink, String filePath) {
 		File file = new File(filePath);
 		BufferedImage bi = null;
@@ -202,12 +232,8 @@ public class Selenium {
 						.getAttribute("alt");
 				String href = webElement.findElement(By.className("subject")).getAttribute("href");
 
-				int num = 0;
-				if (isStringInt(title.substring(0, 2))) {
-					num = Integer.parseInt(title.substring(0, 2));
-				}
-
-				if (min <= num && num <= max) {
+				int no = Integer.parseInt(webElement.findElements(By.tagName("td")).get(1).getText());
+				if (min <= no && no <= max) {
 					list.put(title, href);
 				}
 			}
@@ -222,31 +248,38 @@ public class Selenium {
 	public String crawlKeyword(String keyword) {
 		List<WebElement> titleList = new ArrayList<WebElement>();
 		String url = "https://www.itemscout.io/keyword/";
-		StringBuilder sb = new StringBuilder();
+		ArrayList<String> keywordList = new ArrayList<String>();
+		String outKeyword=null;
+		int i=0;
 		try {
 			driver.get(url);
-			WebDriverWait wait = new WebDriverWait(driver, 10);
 			WebElement webElement = driver.findElement(By.className("input-keyword"));
+			webElement.sendKeys(Keys.chord(Keys.CONTROL,"a"));
+			webElement.sendKeys(Keys.BACK_SPACE);
 			webElement.sendKeys(keyword);
 
 			webElement = driver.findElement(By.className("btn-search-keyword"));
 			webElement.click();
 
 			Thread.sleep(1000);
-			titleList = driver.findElements(By.className("related-keyword-item"));
+			webElement = driver.findElement(By.xpath("//*[@id=\"container\"]/div/div[2]/div[1]/div/div[4]"));
+			webElement.click();
+
+			Thread.sleep(1000);
+			titleList = driver.findElement(By.xpath("//*[@id=\"rel-keyword-table-scroll-wrapper\"]/table/tbody")).findElements(By.tagName("tr"));
+
 
 			for (WebElement list : titleList) {
-				// System.out.print(list.getText() + ",");
-				sb.append(list.getText() + ",");
+				keywordList.add(list.findElements(By.tagName("td")).get(1).getText());
 			}
+			outKeyword=String.join(",", keywordList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return sb.toString();
+		return outKeyword;
 	}
 
-	/** ¼ıÀÚ¸é true ¾Æ´Ï¸é false **/
 	public static boolean isStringInt(String s) {
 		try {
 			Integer.parseInt(s);
@@ -256,7 +289,6 @@ public class Selenium {
 		}
 	}
 
-	/** ÆÄÀÏ ¸ñ·Ï°¡Á®¿À±â **/
 	public void getDirectoryList(int index) {
 		String isDir = "D:\\alrba\\";
 		File directory = null;
@@ -264,11 +296,11 @@ public class Selenium {
 		int newWidth = 500;
 		int newHeight = 500;
 		Image image;
-		// ÇÏÀ§ µğ·ºÅä¸®
 
 		for (File info : new File(isDir).listFiles()) {
 			if (info.isDirectory()) {
-				if (isStringInt(info.getName().substring(0,2))&&index == Integer.parseInt(info.getName().substring(0, 2))) {
+				if (isStringInt(info.getName().substring(0, 2))
+						&& index == Integer.parseInt(info.getName().substring(0, 2))) {
 					System.out.println(info.getName());
 					directory = info;
 					break;
@@ -281,16 +313,9 @@ public class Selenium {
 				if (info.getName().substring(0, 1).equals("m")) {
 					try {
 						image = ImageIO.read(info);
-						
-						// ÀÌ¹ÌÁö ¸®»çÀÌÁî
-						// Image.SCALE_DEFAULT : ±âº» ÀÌ¹ÌÁö ½ºÄÉÀÏ¸µ ¾Ë°í¸®Áò »ç¿ë
-						// Image.SCALE_FAST : ÀÌ¹ÌÁö ºÎµå·¯¿òº¸´Ù ¼Óµµ ¿ì¼±
-						// Image.SCALE_REPLICATE : ReplicateScaleFilter Å¬·¡½º·Î ±¸Ã¼È­ µÈ ÀÌ¹ÌÁö Å©±â Á¶Àı ¾Ë°í¸®Áò
-						// Image.SCALE_SMOOTH : ¼Óµµº¸´Ù ÀÌ¹ÌÁö ºÎµå·¯¿òÀ» ¿ì¼±
-						// Image.SCALE_AREA_AVERAGING : Æò±Õ ¾Ë°í¸®Áò »ç¿ë
+
 						Image resizeImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
 
-						// »õ ÀÌ¹ÌÁö ÀúÀåÇÏ±â
 						BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 						Graphics g = newImage.getGraphics();
 						g.drawImage(resizeImage, 0, 0, null);
@@ -304,12 +329,9 @@ public class Selenium {
 				}
 			}
 		}
-
-		System.out.println("¸ŞÀÎ ÀÌ¹ÌÁö¸¦ ¼º°øÀûÀ¸·Î ¸®»çÀÌÂ¡ Çß½À´Ï´Ù.");
-
 	}
 
-	/** »óÇ° µî·ÏÇÏ±â **/
+	//ìƒì„¸ì •ë³´ ì…ë ¥
 	public void insertCommodity(String code, int index, String size, String color, String keyword) {
 		System.out.println("size : " + size);
 		String url = "https://wing.coupang.com/tenants/seller-web/vendor-inventory/form?displayCategoryCode=" + code;
@@ -317,84 +339,98 @@ public class Selenium {
 		try {
 			driver.get(url);
 
-			// ºê·£µå ÀÔ·Â
 			WebElement brand = driver.findElement(By.id("brand"));
-			brand.sendKeys("½ã¿Õ");
+			brand.sendKeys("ì¬ì™•");
 
-			// Á¦Á¶»ç ÀÔ·Â
 			WebElement manufacture = driver.findElement(By.id("manufacture"));
-			manufacture.sendKeys("½ã¿Õ");
+			manufacture.sendKeys("ì¬ì™•");
 
-			// Á¦Ç°Æú´õÀÌ¸§ °¡Á®¿À±â
 			String directoryName = selectDirectory(isDir, index);
 
-			// µî·Ï»óÇ°¸í ÀÔ·Â
 			String productName = directoryName.split("\\(")[0];
 			WebElement productNameInput = driver.findElement(By.id("productName"));
 			productNameInput.sendKeys(productName);
 
-			// Á¦Ç°¸í ÀÔ·Â
 			String generalProductName = productName.split("\\.")[1];
 			WebElement generalProductNameInput = driver.findElement(By.id("generalProductName"));
 			generalProductNameInput.sendKeys(generalProductName);
+			
+			//42119 = ì›¨ì§€ìƒŒë“¤, 42109=ìŠ¬ë¦¬í¼, 67953=ìª¼ë¦¬
+			if(code.equals("42109")||code.equals("42119")||code.equals("67953")) {
+				//ì‹ ë°œ ìƒ‰ìƒ ì…ë ¥
+				driver.findElement(By.xpath("//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[1]/div/div/div[2]/div/div/span/input"))
+				.sendKeys(color);
 
-			// »çÀÌÁî ÀÔ·Â
-			driver.findElement(By.xpath(
-					"//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[1]/div/div/div[2]/div/div/span/input"))
-					.sendKeys(size);
 
-			Thread.sleep(500);
-			// »ö»ó ÀÔ·Â
-			driver.findElement(By.xpath(
-					"//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div/div[2]/div/div/span/input"))
-					.sendKeys(color);
+				//ì‹ ë°œ ì‚¬ì´ì¦ˆ ì…ë ¥
+				driver.findElement(By.xpath("//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div/div[2]/div/span/input"))
+				.click();
 
-			// ¿É¼Ç ±¸¼ºÇÏ±â Å¬¸¯
+				WebElement sizeInput=driver.findElement(By.xpath("//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div/div[2]/div/div[1]/div[1]/span/input"));
+				sizeInput.click();
+				Thread.sleep(500);
+				sizeInput.sendKeys(size);
+
+				//ì¶”ê°€
+				driver.findElement(By.xpath("//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div/div[2]/div/div[1]/div[1]/span/span/button"))
+				.click();
+				//ë‹«ê¸°
+				driver.findElement(By.xpath("//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div[1]/div[2]/div/div[1]/div[2]/a")).click();
+
+			}else {
+				//ì¼ë°˜ ì‚¬ì´ì¦ˆ ì…ë ¥
+				driver.findElement(By.xpath(
+						"//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[1]/div/div/div[2]/div/div/span/input"))
+				.sendKeys(size);
+
+				Thread.sleep(500);
+				//ì¼ë°˜ ìƒ‰ìƒ ì…ë ¥
+				driver.findElement(By.xpath(
+						"//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/fieldset[2]/div/div/div[2]/div/div/span/input"))
+				.sendKeys(color);
+				
+			}
+
 			driver.findElement(By.xpath(
 					"//*[@id=\"vendor-inventory-item-section\"]/div[2]/div[2]/div[1]/div/div/div/div/div[2]/button"))
-					.click();
+			.click();
 
 			Thread.sleep(1000);
 
-			// table ¸Ç À­ÁÙ row °¡Á®¿À±â
 			WebElement selectInput = driver.findElement(By.id("itemAttribute")).findElements(By.tagName("tr")).get(1);
 
-			// °¡°İ °¡Á®¿Â ÈÄ µî·Ï
 			String price = directoryName.split("\\(")[1];
 			price = price.replaceAll("\\)", "");
 			selectInput.findElements(By.tagName("td")).get(13).click();
 			selectInput.findElements(By.tagName("td")).get(13).findElement(By.tagName("input")).sendKeys(price);
 			driver.findElement(By.xpath("//*[@id=\"itemAttribute_salePrice\"]/div[1]/button")).click();
 
-			// ÃÊ±â Àç°í¼ö·® µî·Ï
 			selectInput.findElements(By.tagName("td")).get(18).click();
 			selectInput.findElements(By.tagName("td")).get(18).findElement(By.tagName("input")).sendKeys("100");
 			driver.findElement(By.xpath("//*[@id=\"itemAttribute_maximumBuyCount\"]/div[1]/button")).click();
 
-			// °í½ÃÁ¤º¸ ÆË¾÷
 			selectInput.findElements(By.tagName("td")).get(21).click();
 
-			Thread.sleep(1000);
+			Thread.sleep(500);
 			driver.findElement(By.xpath("//*[@id=\"noticeCategoryName\"]")).click();
 
+			Thread.sleep(500);
 			driver.findElement(By.xpath("//*[@id=\"noticeCategoryName\"]/option[2]")).click();
-			// °í½ÃÁ¤º¸ ÆË¾÷¿¡¼­ »ó¼¼ÆäÀÌÁö ÂüÁ¶ ¾²±â ÈÄ µî·Ï
+
 			List<WebElement> list = driver.findElements(By.xpath("//*[@id=\"noticeContents\"]/tbody/tr"));
 			for (WebElement content : list) {
-				if (!content.findElements(By.tagName("td")).get(1).getText().equals("Ç°Áúº¸Áõ±âÁØ")) {
+				if (!content.findElements(By.tagName("td")).get(1).getText().equals("í’ˆì§ˆë³´ì¦ê¸°ì¤€")) {
 					content.findElement(By.tagName("textarea")).sendKeys(Keys.chord(Keys.CONTROL, "a"));
 					content.findElement(By.tagName("textarea")).sendKeys(Keys.BACK_SPACE);
-					content.findElement(By.tagName("textarea")).sendKeys("»ó¼¼ ÆäÀÌÁö ÂüÁ¶");
+					content.findElement(By.tagName("textarea")).sendKeys("ìƒì„¸í˜ì´ì§€ ì°¸ì¡°");
 				}
 			}
 			driver.findElement(By.xpath("//*[@id=\"applyNoticeToAllRowsButton\"]")).click();
 
-			// Ãâ°í ¼Ò¿ä±â°£ µî·Ï
 			selectInput.findElements(By.tagName("td")).get(23).click();
-			selectInput.findElements(By.tagName("td")).get(23).findElement(By.tagName("input")).sendKeys("9");
+			selectInput.findElements(By.tagName("td")).get(23).findElement(By.tagName("input")).sendKeys("12");
 			driver.findElement(By.xpath("//*[@id=\"itemAttribute_outboundShippingTime\"]/div[1]/button")).click();
 
-			// ¹ÙÄÚµå µî·Ï
 			selectInput.findElements(By.tagName("td")).get(24).click();
 			Thread.sleep(500);
 			driver.findElement(By.xpath("//*[@id=\"barcodeForm\"]/div[2]/div[1]/label[2]/input")).click();
@@ -404,32 +440,23 @@ public class Selenium {
 			Thread.sleep(500);
 			driver.findElement(By.xpath("//*[@id=\"applyBarcodeToAllRowsButton\"]")).click();
 
-			// ÀÎÁõ ½Å°íµî Á¤º¸ µî·Ï
 			selectInput.findElements(By.tagName("td")).get(25).click();
 			Thread.sleep(500);
 			driver.findElement(By.xpath("//*[@id=\"certificationForm\"]/div[2]/label[3]/input")).click();
 			driver.findElement(By.xpath("//*[@id=\"applyCertificationToAllRowsButton\"]")).click();
 			Thread.sleep(500);
 
-			// °Ë»ö¾î µî·Ï
-			driver.findElement(By.xpath("//*[@id=\"search-tag-section\"]/div[1]/div[2]/button")).click();
-			Thread.sleep(500);
-			driver.findElement(
-					By.xpath("//*[@id=\"search-tag-section\"]/div[2]/div[2]/div/div[1]/div[2]/div/span/input"))
-					.sendKeys(keyword);
-			driver.findElement(
-					By.xpath("//*[@id=\"search-tag-section\"]/div[2]/div[2]/div/div[1]/div[2]/div/span/input"))
-					.sendKeys(Keys.ENTER);
 
-		} catch (Exception e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public String selectDirectory(String isDir, int index) {
 		for (File info : new File(isDir).listFiles()) {
 			if (info.isDirectory()) {
-				if (isStringInt(info.getName().substring(0, 2))&&index==Integer.parseInt(info.getName().substring(0,2))){
+				if (isStringInt(info.getName().substring(0, 2))
+						&& index == Integer.parseInt(info.getName().substring(0, 2))) {
 					return info.getName();
 				}
 			}

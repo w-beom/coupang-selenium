@@ -10,45 +10,45 @@ public class Main {
 
 		while (true) {
 			System.out.println("------------------------------------");
-			System.out.println("1.ÀÌ¹ÌÁö °¡Á®¿À±â 2.Å°¿öµå °Ë»ö 3.ÀÌ¹ÌÁö ¸®»çÀÌÂ¡ ÇÏ±â 4.»óÇ° µî·ÏÇÏ±â 5.Á¾·á");
+			System.out.println("1.ì´ë¯¸ì§€ ê°€ì ¸ì˜¤ê¸° 2.í‚¤ì›Œë“œ ê²€ìƒ‰ 3.ì´ë¯¸ì§€ ë¦¬ì‚¬ì´ì§• í•˜ê¸° 4.ìƒí’ˆ ë“±ë¡í•˜ê¸° 5.ì¢…ë£Œ");
 			System.out.println("------------------------------------");
 			int menu = sc.nextInt();
 			sc.nextLine();
 			switch (menu) {
 			case 1:
-				System.out.println("°¡Á®¿À°í ½ÍÀº ¹øÈ£ÀÇ ¹üÀ§¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä.");
-				System.out.print("ÃÖ¼Ò : ");
+				System.out.println("ê°€ì ¸ì˜¤ê³  ì‹¶ì€ ë²ˆí˜¸ì˜ ë²”ìœ„ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+				System.out.print("ìµœì†Œ : ");
 				int min = sc.nextInt();
-				System.out.println("\nÃÖ´ë : ");
+				System.out.println("\nìµœëŒ€ : ");
 				int max = sc.nextInt();
 				list = selenium.crawlTitle(min, max);
 				selenium.crawlImg(list);
 				
 				break;
 			case 2:
-				System.out.print("°¡Á®¿À°í ½ÍÀº ´Ü¾î¸¦ ÀÔ·ÂÇÏ¼¼¿ä : ");
+				System.out.print("ê°€ì ¸ì˜¤ê³  ì‹¶ì€ ë‹¨ì–´ë¥¼ ì…ë ¥í•˜ì„¸ìš” : ");
 				String keyword = sc.nextLine();
 				resultKeyword=selenium.crawlKeyword(keyword);
 				System.out.println(resultKeyword);
 				break;
 				
 			case 3:
-				System.out.println("¸®»çÀÌÂ¡ÇÒ Æú´õ : ");
+				System.out.println("ë¦¬ì‚¬ì´ì§•í•  í´ë” : ");
 				int index= sc.nextInt();
 				selenium.getDirectoryList(index);
 				break;
 			case 4:
-				//System.out.println("µî·ÏÇÒ »óÇ°ÀÇ ÄÚµå¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä : ");
-				String code = "69524";
+				System.out.println("ë“±ë¡í•  ìƒí’ˆì˜ ì½”ë“œë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš” : ");
+				String code = sc.nextLine();
 				
-				System.out.print("µî·ÏÇÒ »óÇ°ÀÇ ¹øÈ£¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä : ");
+				System.out.print("ë“±ë¡í•  ìƒí’ˆì˜ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš” : ");
 				int directoryIndex = sc.nextInt();
 				sc.nextLine();
 				
-				System.out.print("»çÀÌÁî¸¦ ÀÔ·ÂÇØÁÖ¼¼¿ä : ");
+				System.out.print("ì‚¬ì´ì¦ˆë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš” : ");
 				String size= sc.nextLine();
 				
-				System.out.print("»ö»óÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä : ");
+				System.out.print("ìƒ‰ìƒì„ ì…ë ¥í•´ì£¼ì„¸ìš” : ");
 				String color = sc.nextLine();
 				selenium.insertCommodity(code,directoryIndex,size,color,resultKeyword);
 				break;
